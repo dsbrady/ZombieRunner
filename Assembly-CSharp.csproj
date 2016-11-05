@@ -49,7 +49,9 @@
      <Compile Include="Assets\Scripts\DayCycle.cs" />
      <Compile Include="Assets\Scripts\Eyes.cs" />
      <Compile Include="Assets\Scripts\Helicopter.cs" />
+     <Compile Include="Assets\Scripts\InnerVoice.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\RadioSystem.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

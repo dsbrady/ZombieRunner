@@ -32,5 +32,7 @@ public class Helicopter : MonoBehaviour {
 		audioSource.Play();
 
 		rigidBody.velocity = new Vector3(0,0,50f);
+
+		// TODO: make sure the call helicopter in the clear area stays false;
 	}
 }

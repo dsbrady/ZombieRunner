@@ -3,42 +3,40 @@ using System.Collections;
 
 public class ClearCollider : MonoBehaviour {
 
-	public AudioClip chopperCanLandClip;
-
-	private AudioSource audioSource;
-	private bool canPlayClip = true;
-	private bool isColliding = false;
+	private bool canCallHelicopter = true;
+	private bool isNewClearArea = false;
+	public int currentlyCollidingObjects = 0;
 	private float lastTriggerTime;
 
 	// Use this for initialization
 	void Start () {
-		audioSource = GetComponent<AudioSource>();
 		lastTriggerTime = Time.time;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (!isColliding && canPlayClip && (Time.time - lastTriggerTime > 1.0)) {
-			// Set isColliding to true to make sure this only happens once per clear space
-			isColliding = true;
-			canPlayClip = false;
-			audioSource.clip = chopperCanLandClip;
-			audioSource.Play();
+		// We want to not be able to call a helicopter until at least 10 seconds of game time has passed and when the area is clear
+		if (Time.realtimeSinceStartup > 10f && isNewClearArea && currentlyCollidingObjects == 0 && (Time.time - lastTriggerTime > 1.0)) {
+			isNewClearArea = false;
+			canCallHelicopter = true;
+			SendMessageUpwards("OnFindClearArea");
 		}
 	}
 
 	void OnTriggerEnter(Collider collider) {
-		canPlayClip = false;
-		isColliding = true;
+		if (collider.name != "Player") {
+			currentlyCollidingObjects++;
+			canCallHelicopter = false;
+			isNewClearArea = true;
+		}
 	}
 
 	void OnTriggerExit(Collider collider) {
-		canPlayClip = true;
-		isColliding = false;
+		currentlyCollidingObjects--;
 		lastTriggerTime = Time.time;
 	}
 
 	public bool CanCallHelicopter() {
-		return !isColliding;
+		return canCallHelicopter;
 	}
 }

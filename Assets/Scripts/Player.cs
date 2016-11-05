@@ -8,8 +8,14 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	public bool respawnTrigger = false;
+	public Helicopter helicopter;
 
+	/* TODO: Record audio clips */
+	public AudioClip whatHappened;
+	public AudioClip foundClearArea;
+
+	private AudioSource innerVoice;
+	private bool respawnTrigger = false;
 	private Transform spawnPointContainer;
 	private List<Transform> spawnPoints = new List<Transform>();
 
@@ -17,6 +23,17 @@ public class Player : MonoBehaviour {
 	void Start () {
 		spawnPointContainer = GameObject.Find("Player Spawn Points").transform;
 		spawnPointContainer.GetComponentsInChildren<Transform>(false, spawnPoints);
+
+		AudioSource[] audioSources = GetComponents<AudioSource>();
+		foreach (AudioSource audiosource in audioSources) {
+			if (audiosource.priority == 1) {
+				innerVoice = audiosource;
+				break;
+			}
+		}
+
+		innerVoice.clip = whatHappened;
+		innerVoice.Play();
 	}
 	
 	// Update is called once per frame
@@ -28,6 +45,8 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnFindClearArea() {
+		innerVoice.clip = foundClearArea;
+		innerVoice.Play();
 		Debug.Log("Found clear area in player");
 	}
 
