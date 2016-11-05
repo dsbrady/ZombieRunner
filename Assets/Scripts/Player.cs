@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+/* TODO:
+1) Create opening menu scene
+2) Instructions screen
+*/
 
 public class Player : MonoBehaviour {
 
@@ -21,6 +25,10 @@ public class Player : MonoBehaviour {
 			respawnTrigger = false;
 			Respawn();
 		}
+	}
+
+	void OnFindClearArea() {
+		Debug.Log("Found clear area in player");
 	}
 
 	private void Respawn() {

@@ -6,16 +6,21 @@ public class Helicopter : MonoBehaviour {
 	public AudioClip summonClip;
 
 	private AudioSource audioSource;
+	private ClearCollider clearCollider;
 	private bool isIdle = true;
+	private Rigidbody rigidBody;
 
 	// Use this for initialization
 	void Start () {
 		audioSource = GetComponent<AudioSource>();
+		clearCollider = GameObject.FindObjectOfType<ClearCollider>();
+		rigidBody = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (this.isIdle && Input.GetButtonUp("CallHelicopter")) {
+		Debug.Log(clearCollider.CanCallHelicopter());
+		if (this.isIdle && clearCollider.CanCallHelicopter() && Input.GetButtonUp("CallHelicopter")) {
 			Summon();
 		}
 	}
@@ -25,6 +30,7 @@ public class Helicopter : MonoBehaviour {
 
 		audioSource.clip = summonClip;
 		audioSource.Play();
-		Debug.Log("calling helicopter");
+
+		rigidBody.velocity = new Vector3(0,0,50f);
 	}
 }
