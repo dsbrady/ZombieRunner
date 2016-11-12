@@ -3,13 +3,20 @@ using System.Collections;
 
 public class InnerVoice : MonoBehaviour {
 
+	public AudioClip chopperCanLandHere;
+	public AudioClip whereAmI;
+
+	private AudioSource audioSource;
+
 	// Use this for initialization
 	void Start () {
-	
+		audioSource = GetComponent<AudioSource>();
+		audioSource.clip = whereAmI;
+		audioSource.Play();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	void OnCanSummonHelicopter () {
+		audioSource.clip = chopperCanLandHere;
+		audioSource.Play();
 	}
 }

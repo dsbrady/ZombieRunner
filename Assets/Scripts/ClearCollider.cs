@@ -3,9 +3,10 @@ using System.Collections;
 
 public class ClearCollider : MonoBehaviour {
 
-	private bool canCallHelicopter = true;
-	private bool isNewClearArea = false;
+	//TODO: make this private
 	public int currentlyCollidingObjects = 0;
+	private bool isHelicopterIdle = true;
+	private bool isNewClearArea = false;
 	private float lastTriggerTime;
 
 	// Use this for initialization
@@ -16,9 +17,8 @@ public class ClearCollider : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// We want to not be able to call a helicopter until at least 10 seconds of game time has passed and when the area is clear
-		if (Time.realtimeSinceStartup > 10f && isNewClearArea && currentlyCollidingObjects == 0 && (Time.time - lastTriggerTime > 1.0)) {
+		if (isHelicopterIdle && Time.realtimeSinceStartup > 10f && isNewClearArea && currentlyCollidingObjects == 0 && (Time.time - lastTriggerTime > 1.0)) {
 			isNewClearArea = false;
-			canCallHelicopter = true;
 			SendMessageUpwards("OnFindClearArea");
 		}
 	}
@@ -26,17 +26,16 @@ public class ClearCollider : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		if (collider.name != "Player") {
 			currentlyCollidingObjects++;
-			canCallHelicopter = false;
-			isNewClearArea = true;
 		}
 	}
 
 	void OnTriggerExit(Collider collider) {
 		currentlyCollidingObjects--;
 		lastTriggerTime = Time.time;
+		isNewClearArea = true;
 	}
 
-	public bool CanCallHelicopter() {
-		return canCallHelicopter;
+	void OnDispatchHelicopter() {
+		isHelicopterIdle = false;
 	}
 }

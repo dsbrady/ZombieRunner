@@ -8,13 +8,10 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	public Helicopter helicopter;
+	public GameObject landingAreaPrefab;
 
-	/* TODO: Record audio clips */
-	public AudioClip whatHappened;
-	public AudioClip foundClearArea;
-
-	private AudioSource innerVoice;
+	private bool canSummonHelicopter = false;
+	private GameObject landingArea;
 	private bool respawnTrigger = false;
 	private Transform spawnPointContainer;
 	private List<Transform> spawnPoints = new List<Transform>();
@@ -23,17 +20,6 @@ public class Player : MonoBehaviour {
 	void Start () {
 		spawnPointContainer = GameObject.Find("Player Spawn Points").transform;
 		spawnPointContainer.GetComponentsInChildren<Transform>(false, spawnPoints);
-
-		AudioSource[] audioSources = GetComponents<AudioSource>();
-		foreach (AudioSource audiosource in audioSources) {
-			if (audiosource.priority == 1) {
-				innerVoice = audiosource;
-				break;
-			}
-		}
-
-		innerVoice.clip = whatHappened;
-		innerVoice.Play();
 	}
 	
 	// Update is called once per frame
@@ -42,12 +28,10 @@ public class Player : MonoBehaviour {
 			respawnTrigger = false;
 			Respawn();
 		}
-	}
 
-	void OnFindClearArea() {
-		innerVoice.clip = foundClearArea;
-		innerVoice.Play();
-		Debug.Log("Found clear area in player");
+		if (canSummonHelicopter && Input.GetButtonUp("CallHelicopter")) {
+			SummonHelicopter();
+		}
 	}
 
 	private void Respawn() {
@@ -56,5 +40,27 @@ public class Player : MonoBehaviour {
 
 		gameObject.transform.position = spawnPoints[spawnPointNumber].position;
 		gameObject.transform.rotation = spawnPoints[spawnPointNumber].rotation;
+	}
+
+	void OnFindClearArea() {
+		canSummonHelicopter = true;
+	}
+
+	private void CreateLandingArea() {
+		if (landingArea) {
+			Destroy(landingArea);
+		}
+		Vector3 position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		landingArea = Instantiate(landingAreaPrefab, position, Quaternion.identity) as GameObject;
+
+	}
+
+	private void SummonHelicopter() {
+		// Send a radio message to the helicopter, then a second or so later, have the helicopter pilot respond
+
+		// Drop a flare and create the landing are
+		CreateLandingArea();
+
+		SendMessageUpwards("OnSummonHelicopter");
 	}
 }
